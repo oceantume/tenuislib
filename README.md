@@ -12,9 +12,9 @@ This is under development and mostly untested. Use it at your own risk and feel 
 template<class T, class TError = tenuis::nullopt_t>
 class optional;
 ```
-This class template is similar to [std::optional][http://en.cppreference.com/w/cpp/utility/optional] but extends its idea of being either a **value** or **empty** to being either a **value** or an **error**. It does so by adding a template parameter TError which is the type of the **error** when no **value** is present.
-The default parameter for TError is tenuis::nullopt_t which is the exact equivalent of [std::nullopt_t][http://en.cppreference.com/w/cpp/utility/optional/nullopt_t]. This allows tenuis::optional<T> to be used in the same way std::optional<T> would be used at no additional cost (storage or performance).
-This is similar is some ways to using [boost::variant][http://www.boost.org/doc/libs/1_61_0/doc/html/variant.html] with two template parameters, but the implementation is a lot simpler and more opiniated about its content (i.e. variant has no name for its contained types).
+This class template is similar to [std::optional](http://en.cppreference.com/w/cpp/utility/optional) but extends its idea of being either a **value** or **empty** to being either a **value** or an **error**. It does so by adding a template parameter TError which is the type of the **error** when no **value** is present.
+The default parameter for TError is tenuis::nullopt_t which is the exact equivalent of [std::nullopt_t](http://en.cppreference.com/w/cpp/utility/optional/nullopt_t). This allows tenuis::optional<T> to be used in the same way std::optional<T> would be used at no additional cost (storage or performance).
+This is similar is some ways to using [boost::variant](http://www.boost.org/doc/libs/1_61_0/doc/html/variant.html) with two template parameters, but the implementation is a lot simpler and more opiniated about its content (i.e. variant has no name for its contained types).
 
 #### Main usage differences with std::optional
  * **has_error()** is the equivalent of **!has_value()** and indicates that an error is contained.
