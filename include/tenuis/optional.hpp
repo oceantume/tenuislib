@@ -40,10 +40,10 @@ struct nullopt_t {
 constexpr nullopt_t nullopt{ 0 };
 
 
-template<class TValue, class TError = nullopt_t>
+template<class T, class TError = nullopt_t>
 class optional
 {
-	static_assert(!std::is_same<TValue, TError>::value, "Using the same type for both Value and Error is not supported.");
+	static_assert(!std::is_same<T, TError>::value, "Using the same type for both Value and Error is not supported.");
 
 public:
 	//
@@ -71,25 +71,25 @@ public:
 
 
 	//
-	// from TValue
+	// from T
 
-	optional() : optional(TValue()) {}
+	optional() : optional(T()) {}
 
-	optional(const TValue& rhs) {
+	optional(const T& rhs) {
 		assign(rhs);
 	}
 
-	optional(TValue&& rhs) {
+	optional(T&& rhs) {
 		assign(std::move(rhs));
 	}
 
-	optional& operator=(const TValue& rhs) {
+	optional& operator=(const T& rhs) {
 		destroy();
 		assign(rhs);
 		return *this;
 	}
 
-	optional& operator=(TValue&& rhs) {
+	optional& operator=(T&& rhs) {
 		destroy();
 		assign(std::move(rhs));
 		return *this;
@@ -134,14 +134,14 @@ public:
 		return !has_value_;
 	}
 
-	TValue& value() {
+	T& value() {
 		assert(has_value());
-		return reinterpret_cast<TValue&>(storage_);
+		return reinterpret_cast<T&>(storage_);
 	}
 
-	const TValue& value() const {
+	const T& value() const {
 		assert(has_value());
-		return reinterpret_cast<const TValue&>(storage_);
+		return reinterpret_cast<const T&>(storage_);
 	}
 
 	TError& error() {
@@ -162,43 +162,43 @@ public:
 		return has_value();
 	}
 
-	TValue* operator->() {
+	T* operator->() {
 		return &value();
 	}
 
-	const TValue* operator->() const {
+	const T* operator->() const {
 		return &value();
 	}
 
-	TValue& operator*() {
+	T& operator*() {
 		return value();
 	}
 
-	const TValue& operator*() const {
+	const T& operator*() const {
 		return value();
 	}
 
 private:
 	void assign(const optional& rhs) {
 		has_value_ = rhs.has_value_;
-		if (has_value_) ::new (std::addressof(storage_)) TValue(rhs.value());
+		if (has_value_) ::new (std::addressof(storage_)) T(rhs.value());
 		else            ::new (std::addressof(storage_)) TError(rhs.error());
 	}
 
 	void assign(optional&& rhs) {
 		has_value_ = rhs.has_value_;
-		if (has_value_) ::new (std::addressof(storage_)) TValue(std::move(rhs.value()));
+		if (has_value_) ::new (std::addressof(storage_)) T(std::move(rhs.value()));
 		else            ::new (std::addressof(storage_)) TError(std::move(rhs.error()));
 	}
 
-	void assign(const TValue& rhs) {
+	void assign(const T& rhs) {
 		has_value_ = true;
-		::new (std::addressof(storage_)) TValue(rhs);
+		::new (std::addressof(storage_)) T(rhs);
 	}
 
-	void assign(TValue&& rhs) {
+	void assign(T&& rhs) {
 		has_value_ = true;
-		::new (std::addressof(storage_)) TValue(std::move(rhs));
+		::new (std::addressof(storage_)) T(std::move(rhs));
 	}
 
 	void assign(const TError& rhs) {
@@ -212,13 +212,13 @@ private:
 	}
 
 	void destroy() {
-		if (has_value_) value().~TValue();
+		if (has_value_) value().~T();
 		else            error().~TError();
 	}
 
 
-	static constexpr auto storage_size = tenuis::max_size<TValue, TError>::value;
-	static constexpr auto storage_align = tenuis::max_align<TValue, TError>::value;
+	static constexpr auto storage_size = tenuis::max_size<T, TError>::value;
+	static constexpr auto storage_align = tenuis::max_align<T, TError>::value;
 
 	using storage_type = typename std::aligned_storage<storage_size, storage_align>::type;
 
