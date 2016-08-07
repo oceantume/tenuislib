@@ -42,7 +42,7 @@ template<class T, class TError = nullopt_t>
 class optional
 {
 	static_assert(!std::is_same<T, TError>::value, "Using the same type for both Value and Error is not supported.");
-	static_assert(sizeof(T) > 0 || sizeof(TError), "Storage size must be greated than zero (required by std::aligned_union).");
+	static_assert(sizeof(T) && sizeof(TError), "Storage size must be greated than zero (required by std::aligned_union).");
 
 public:
 	//
@@ -216,7 +216,6 @@ private:
 	}
 
 	using storage_type = typename std::aligned_union<0, T, TError>::type;
-	
 
 	bool has_value_;
 	storage_type storage_;
