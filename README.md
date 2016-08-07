@@ -18,24 +18,24 @@ This is similar is some ways to using [boost::variant](http://www.boost.org/doc/
 
 ### Example usage
 ```cpp
-enum class ErrorCodes { InvalidHello, InvalidWorld };
+enum class ErrorCode { InvalidHello, InvalidWorld };
 
-using ExampleResult = tenuis::optional<std::string, ErrorCodes>;
+using ExampleResult = tenuis::optional<std::string, ErrorCode>;
 
-ExampleResult makeExample(std::string hello, std::string world) {
-	if (hello != "Hello")      return ErrorCodes::InvalidHello;
-	else if (world != "World") return ErrorCodes::InvalidWorld;
+ExampleResult makeExample(const std::string& hello, const std::string& world) {
+	if (hello != "Hello")      return ErrorCode::InvalidHello;
+	else if (world != "World") return ErrorCode::InvalidWorld;
 	else                       return hello + " " + world + "!";
 }
 
-void printExample(std::string hello, std::string world) {
+void printExample(const std::string& hello, const std::string& world) {
 	auto example = makeExample(hello, world);
 
 	if (example) {
 		std::cout << "Result: " << example.value() << std::endl;
-	} else if (example.error() == ErrorCodes::InvalidHello) {
+	} else if (example.error() == ErrorCode::InvalidHello) {
 		std::cout << "Error: Invalid hello!" << std::endl;
-	} else if (example.error() == ErrorCodes::InvalidWorld) {
+	} else if (example.error() == ErrorCode::InvalidWorld) {
 		std::cout << "Error: Invalid world!" << std::endl;
 	}
 }

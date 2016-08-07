@@ -25,8 +25,6 @@ SOFTWARE.
 #ifndef HEADER_TENUIS_OPTIONAL_HPP_
 #define HEADER_TENUIS_OPTIONAL_HPP_
 
-#include <tenuis/common.hpp>
-
 #include <cassert>
 #include <type_traits>
 
@@ -44,6 +42,7 @@ template<class T, class TError = nullopt_t>
 class optional
 {
 	static_assert(!std::is_same<T, TError>::value, "Using the same type for both Value and Error is not supported.");
+	static_assert(sizeof(T) > 0 || sizeof(TError), "Storage size must be greated than zero (required by std::aligned_union).");
 
 public:
 	//
@@ -216,11 +215,8 @@ private:
 		else            error().~TError();
 	}
 
-
-	static constexpr auto storage_size = tenuis::max_size<T, TError>::value;
-	static constexpr auto storage_align = tenuis::max_align<T, TError>::value;
-
-	using storage_type = typename std::aligned_storage<storage_size, storage_align>::type;
+	using storage_type = typename std::aligned_union<0, T, TError>::type;
+	
 
 	bool has_value_;
 	storage_type storage_;
