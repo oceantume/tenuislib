@@ -2,7 +2,7 @@
 Tenuis is a collection of experimental utilities for C++11.
 
 ## Current state
-This is under development and mostly untested. Use it at your own risk and feel free to communicate any issue within the code.
+This was an experiment to learn more about C++11. This is now unmaintained and should not be used.
 
 
 ## tenuis::optional
